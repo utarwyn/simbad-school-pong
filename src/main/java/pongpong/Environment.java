@@ -13,9 +13,10 @@ public class Environment extends EnvironmentDescription {
 	public Environment() {
 		setWorldSize(35);
 		light1SetPosition(-5, 10, 5);
+		setUsePhysics(true);
 
-		this.barre1 = new Barre(new Vector3d(-10, 0, 0), new Vector3f(1, 1, 4), this);
-		this.barre2 = new Barre(new Vector3d( 10, 0, 0), new Vector3f(1, 1, 4), this);
+		this.barre1 = new Barre(new Vector3d(-10, 0, 0), new Vector3f(1, 1, 4));
+		this.barre2 = new Barre(new Vector3d( 10, 0, 0), new Vector3f(1, 1, 4));
 
 		add(this.barre1);
 		add(this.barre2);

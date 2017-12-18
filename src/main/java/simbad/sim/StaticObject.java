@@ -60,7 +60,6 @@ public class StaticObject extends BaseObject {
          
     }
     
-    
     /** Gets the bound of the object taking account of its current position.*/
     protected Bounds getTransformedBounds(){
         return transformedBounds;

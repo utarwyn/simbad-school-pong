@@ -37,14 +37,14 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 /**
- * @author louis
- *
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
+ *
+ * @author louis
  */
 public class BallAgent extends SimpleAgent {
 
-    Color3f color;
+    protected Color3f color;
     /**
      * @param pos
      * @param name
@@ -66,7 +66,7 @@ public class BallAgent extends SimpleAgent {
 
    
     /** Create 3D geometry. */
-    protected void create3D(){
+    protected void create3D() {
          Appearance  appear = new Appearance();
         
         material.setDiffuseColor(color);

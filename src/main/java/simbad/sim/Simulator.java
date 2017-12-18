@@ -130,6 +130,7 @@ public class Simulator {
         for (int i = 0 ; i < ed.objects.size();i++){
             Object o = ed.objects.get(i);
             objects.add(o);
+
             if (o instanceof StaticObject){
                 // The object is of type static, we add it to the world
                 // and precompute anything possible.
@@ -139,9 +140,7 @@ public class Simulator {
                 // pre compute necessary stuff.
                 so.createLocalToVworld();
                 so.createTransformedBounds();
-                
-                
-            }else if (o instanceof  SimpleAgent){
+            } else if (o instanceof SimpleAgent){
                 // The object is of type agent, we add it to the
                 // simulator and call create.
                 SimpleAgent agent = (SimpleAgent)o;

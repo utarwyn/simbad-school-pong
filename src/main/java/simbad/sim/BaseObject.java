@@ -69,8 +69,8 @@ public  abstract class BaseObject {
     /** A prepared color */
     static Color3f white = new Color3f(1.0f, 1.0f, 1.0f);
 
-    /** Indicates that the wall object branch can be compiled to optimize sceneGraph */ 
-    boolean compilable;
+    /** Indicates that the wall object branch can be compiled to optimize sceneGraph */
+	protected boolean compilable;
     
     /** keep direct pointer onto bounds object associated  to group node. */
     protected Bounds localBounds;
@@ -78,7 +78,7 @@ public  abstract class BaseObject {
     /** if true the  object can be traversed - no collision  */
     boolean canBeTraversed;
     
-    BaseObject() {
+    protected BaseObject() {
         compilable = false;  
         canBeTraversed = false;
         // Material for object body.
@@ -92,8 +92,7 @@ public  abstract class BaseObject {
         Transform3D t3d = new Transform3D();
         t3d.setTranslation(t);
         translation.mul(t3d);
-        translationGroup.setTransform(translation); 
-        
+		translationGroup.setTransform(translation);
     }
 
     /** Rotates (relative to current rotation) the object about Y axis. */
@@ -112,7 +111,7 @@ public  abstract class BaseObject {
    	}
 
     /** Create the object geometry. */
-    void create3D(boolean allowTransformReadWrite) {
+    protected void create3D(boolean allowTransformReadWrite) {
         //STRUCTURE Branch group->Translation Transform Group -> Rotation Transform Group->Group
         
         branchGroup = new BranchGroup();
@@ -124,7 +123,7 @@ public  abstract class BaseObject {
         translationGroup = new TransformGroup();
         translationGroup.setTransform(translation);
         branchGroup.addChild(translationGroup);
-        if (allowTransformReadWrite){      	
+        if (allowTransformReadWrite) {
 	        translationGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 	        translationGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 	        translationGroup.setCapability(TransformGroup.ALLOW_LOCAL_TO_VWORLD_READ);
@@ -132,13 +131,14 @@ public  abstract class BaseObject {
 	        translationGroup.setCapabilityIsFrequent(TransformGroup.ALLOW_TRANSFORM_READ);
 	        translationGroup.setCapabilityIsFrequent(TransformGroup.ALLOW_LOCAL_TO_VWORLD_READ);
         }
+
         // rotation transform
         rotation = new Transform3D();
         rotation.setIdentity();
         rotationGroup = new TransformGroup();
         rotationGroup.setTransform(rotation);
         translationGroup.addChild(rotationGroup);
-        if (allowTransformReadWrite){      	
+        if (allowTransformReadWrite){
 	        rotationGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 	        rotationGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 	        rotationGroup.setCapability(TransformGroup.ALLOW_LOCAL_TO_VWORLD_READ);
@@ -167,7 +167,7 @@ public  abstract class BaseObject {
         group.addChild(object.getNode());
     }
 
-    final void addChild(Node node) {
+    protected final void addChild(Node node) {
         group.addChild(node);
       }
 
@@ -176,6 +176,11 @@ public  abstract class BaseObject {
         translation.get(v);
         return v;
     }
+
+    public Transform3D getTransformTranslation() {
+        return translation;
+    }
+
     TransformGroup getRotationTransformGroup(){
         return rotationGroup;
     }
@@ -186,7 +191,7 @@ public  abstract class BaseObject {
     
     
     /** Sets the bounds object for collision/interaction detection */
-    void setBounds(Bounds bounds){
+    protected void setBounds(Bounds bounds){
         localBounds = bounds;
         group.setBounds(bounds);
     }
