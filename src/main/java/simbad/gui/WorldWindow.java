@@ -46,9 +46,9 @@ public final class WorldWindow extends JInternalFrame {
     private void initialize() {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
-        panel.add("Center",world.getCanvas3D());
-         setContentPane(panel);
-        setSize(400, 400);
-        setResizable(true);
+        panel.add("Center", world.getCanvas3D());
+
+        setContentPane(panel);
+        setResizable(false);
     }
 }

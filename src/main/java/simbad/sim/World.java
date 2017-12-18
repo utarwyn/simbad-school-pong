@@ -24,9 +24,6 @@
  */
 package simbad.sim;
 
-import com.sun.j3d.utils.geometry.Primitive;
-import com.sun.j3d.utils.geometry.Sphere;
-
 import javax.media.j3d.*;
 import javax.vecmath.*;
 import java.awt.*;
@@ -180,7 +177,7 @@ public  class World   {
       
         
         // Add mouse control in the canvas3d 
-        mouseOrbiter = new MouseOrbiter(canvas3d,viewTransformGroup);
+        //mouseOrbiter = new MouseOrbiter(canvas3d,viewTransformGroup);
 
         	// sets initial viewpoint
         changeViewPoint(ed.worldViewPoint,null);
@@ -251,7 +248,7 @@ public  class World   {
        light.setInfluencingBounds(bounds);
         sceneTrans.addChild(light);
         // light geometry
-        ColoringAttributes ca = new ColoringAttributes();
+        /*ColoringAttributes ca = new ColoringAttributes();
         ca.setColor(color);
         Appearance appL1 = new Appearance();
         appL1.setColoringAttributes(ca);
@@ -259,6 +256,7 @@ public  class World   {
         s.setCollidable(true);
         tg.addChild(s);
         sceneTrans.addChild(tg);
+        */
         return light;
     }
     
@@ -296,9 +294,9 @@ public  class World   {
         TransformGroup tga = new TransformGroup();
         AmbientLight ambientLight = new AmbientLight(wd.ambientLightColor);
         ambientLight.setInfluencingBounds(bounds);
-        tga.addChild(ambientLight);
+        ambientLight.setEnable(true);
         sceneBranch.addChild(tga);
-        
+
         // directional lights
         light1 = addLight(wd.light1Position ,wd.light1Color);
         light2 = addLight(wd.light2Position,wd.light2Color);
@@ -474,10 +472,10 @@ public  class World   {
         Transform3D t2 = new Transform3D();
         t1.setIdentity();
         t2.setIdentity();
-        mouseOrbiter.resetView();
+        //mouseOrbiter.resetView();
         switch (type) {
         case VIEW_FROM_TOP:
-            t1.lookAt(new Point3d(0, worldSize * 1.2, 0),
+            t1.lookAt(new Point3d(0, 40, 0),
                     new Point3d(0, 0, 0), new Vector3d(0, 0, -1));
             t1.invert();
             viewTransformGroup.setTransform(t1);

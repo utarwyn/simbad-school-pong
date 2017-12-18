@@ -89,7 +89,7 @@ public class Simulator {
      * 
      * @param applicationComponent - A reference to the main Application container.
      * @param world - The 3d world object.
-     * @param ed - the Environment description.
+     * @param ed - the pongpong.Environment description.
      */
     public Simulator(JComponent applicationComponent,World world, EnvironmentDescription ed) {
         this.world = world;
@@ -321,10 +321,10 @@ public class Simulator {
     protected boolean getUsePhysics(){
         return usePhysics;
     }
-    protected void setFramesPerSecond(int fps){
+    public void setFramesPerSecond(int fps){
         framesPerSecond = fps;
     }
-    protected int getFramesPerSecond(){
+    public int getFramesPerSecond(){
         return framesPerSecond ;
     }
     /** Set the time factor. Used to increase or decrease the simulation rate.

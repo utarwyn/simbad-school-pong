@@ -110,8 +110,8 @@ public  abstract class BaseObject {
         translationGroup.setTransform(translation);
         rotationGroup.setTransform(rotation);
    	}
-   
-   	/** Create the object geometry. */
+
+    /** Create the object geometry. */
     void create3D(boolean allowTransformReadWrite) {
         //STRUCTURE Branch group->Translation Transform Group -> Rotation Transform Group->Group
         
@@ -171,7 +171,7 @@ public  abstract class BaseObject {
         group.addChild(node);
       }
 
-    Vector3f getTranslation() {
+    public Vector3f getTranslation() {
         Vector3f v = new Vector3f();
         translation.get(v);
         return v;

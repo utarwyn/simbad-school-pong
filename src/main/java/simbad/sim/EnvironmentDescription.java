@@ -93,10 +93,10 @@ public class EnvironmentDescription {
         light2Color = white;
         wallColor = blue;
         archColor = green;
-        boxColor = red;
-        floorColor = ligthgray;
+        boxColor = white;
+        floorColor = black;
         backgroundColor = ligthgray;
-        hasAxis = true;
+        hasAxis = false;
         normalsStyle = NORMALS_SIMPLE;
         worldViewPoint = World.VIEW_FROM_EAST;
         usePhysics = false;
@@ -113,7 +113,7 @@ public class EnvironmentDescription {
    public void light1SetPosition(double x,double y,double z){
        light1Position.set(x,y,z);
    }
-   public void light2SetPosition(double x,double y,double z){
+   public void light2SetPosition(double x,double y,double z) {
        light2Position.set(x,y,z);
    }
    
