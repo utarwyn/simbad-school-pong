@@ -32,48 +32,69 @@ import javax.media.j3d.Transform3D;
 
 /**
  * Base Object for all block world objects (box,wall,arch ...).
- * All object which doesnt move. 
+ * All object which doesnt move.
  */
 public class StaticObject extends BaseObject {
-    /** Transformed bounds is the bound object in global coordinates.   */
-    protected Bounds transformedBounds;
-    /** The local to global transform.*/
-    protected Transform3D localToVworld; 
-    
-    /** Appearance of the object. */
-    protected Appearance appearance;
+	/**
+	 * Transformed bounds is the bound object in global coordinates.
+	 */
+	protected Bounds transformedBounds;
+	/**
+	 * The local to global transform.
+	 */
+	protected Transform3D localToVworld;
 
-    /** Create object's geometry. */
-    void create3D(){
-        super.create3D(false);
-        appearance = new Appearance();
-        compilable = true;
-        localToVworld = new Transform3D();
-    }
-    
-    /** Create and pre Compute the transformed bound of the objects.
-     * Needs localtoVWorld. */
-    protected void createTransformedBounds(){
-        
-        transformedBounds = (Bounds)(localBounds.clone());
-        transformedBounds.transform(localBounds,localToVworld);
-         
-    }
-    
-    /** Gets the bound of the object taking account of its current position.*/
-    protected Bounds getTransformedBounds(){
-        return transformedBounds;
-    }
-    
-    /** Create the definitive local to global transform .*/
-    protected void createLocalToVworld(){
-        group.getLocalToVworld(localToVworld);
-    }
-    
-    /**  Returns true if the object intersect with the given bounding sphere. 
-     * This can be overriden.
-     * @param bs the boundingsphere to intersect with.*/
-    protected boolean intersect(BoundingSphere bs){
-        return transformedBounds.intersect(bs);
-    }
+	/**
+	 * Appearance of the object.
+	 */
+	protected Appearance appearance;
+
+	/**
+	 * Create object's geometry.
+	 */
+	void create3D() {
+		super.create3D(false);
+		appearance = new Appearance();
+		compilable = true;
+		localToVworld = new Transform3D();
+	}
+
+	/**
+	 * Create and pre Compute the transformed bound of the objects.
+	 * Needs localtoVWorld.
+	 */
+	protected void createTransformedBounds() {
+		transformedBounds = (Bounds) (localBounds.clone());
+		transformedBounds.transform(localBounds, localToVworld);
+	}
+
+	protected void computeTransformedBounds() {
+		this.createLocalToVworld();
+		this.createTransformedBounds();
+	}
+
+	/**
+	 * Gets the bound of the object taking account of its current position.
+	 */
+	protected Bounds getTransformedBounds() {
+		return transformedBounds;
+	}
+
+	/**
+	 * Create the definitive local to global transform .
+	 */
+	protected void createLocalToVworld() {
+		group.getLocalToVworld(localToVworld);
+	}
+
+	/**
+	 * Returns true if the object intersect with the given bounding sphere.
+	 * This can be overriden.
+	 *
+	 * @param bs the boundingsphere to intersect with.
+	 */
+	protected boolean intersect(BoundingSphere bs) {
+		return transformedBounds.intersect(bs);
+	}
+
 }

@@ -4,10 +4,8 @@ import simbad.gui.Simbad;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class KeyManager implements KeyListener, Runnable {
 
@@ -15,13 +13,13 @@ public class KeyManager implements KeyListener, Runnable {
 
 	private Map<Integer, List<KeyPress>> listeners;
 
-	private List<Integer> keysPressed;
+	private ConcurrentLinkedQueue<Integer> keysPressed;
 
 	public KeyManager(Simbad simbad) {
 		this.simbad = simbad;
 
 		this.listeners = new HashMap<>();
-		this.keysPressed = new ArrayList<>();
+		this.keysPressed = new ConcurrentLinkedQueue<>();
 
 		this.simbad.getWorld().getCanvas3D().addKeyListener(this);
 		new Thread(this).start();
@@ -41,8 +39,10 @@ public class KeyManager implements KeyListener, Runnable {
 
 	@Override
 	public void keyPressed(KeyEvent keyEvent) {
-		if (!this.keysPressed.contains(keyEvent.getKeyCode()))
-			this.keysPressed.add(keyEvent.getKeyCode());
+		int keyCode = keyEvent.getKeyCode();
+
+		if (!this.keysPressed.contains(keyCode))
+			this.keysPressed.add(keyCode);
 	}
 
 	@Override
@@ -53,7 +53,11 @@ public class KeyManager implements KeyListener, Runnable {
 	@Override
 	public void run() {
 		while (simbad.getWorld().getCanvas3D().isEnabled()) {
-			for (Integer keyPressed : this.keysPressed) {
+			Iterator<Integer> it = this.keysPressed.iterator();
+
+			while (it.hasNext()) {
+				Integer keyPressed = it.next();
+
 				if (this.listeners.get(keyPressed) == null)
 					continue;
 

@@ -89,7 +89,7 @@ public class Simulator {
      * 
      * @param applicationComponent - A reference to the main Application container.
      * @param world - The 3d world object.
-     * @param ed - the pongpong.Environment description.
+     * @param ed - the pongpong.world.Environment description.
      */
     public Simulator(JComponent applicationComponent,World world, EnvironmentDescription ed) {
         this.world = world;

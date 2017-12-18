@@ -1,5 +1,6 @@
-package pongpong;
+package pongpong.world;
 
+import com.sun.j3d.utils.geometry.Box;
 import com.sun.j3d.utils.geometry.Primitive;
 import simbad.sim.BlockWorldObject;
 
@@ -11,16 +12,17 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
-public class Barre extends BlockWorldObject {
+public class Paddle extends BlockWorldObject {
 
 	private float sx, sy, sz;
+
 	private Color3f color;
 
-	Barre(Vector3d pos, Vector3f extent) {
+	Paddle(Vector3d pos, Vector3f extent) {
 		this(pos, extent, null);
 	}
 
-	Barre(Vector3d pos, Vector3f extent, Color3f color) {
+	Paddle(Vector3d pos, Vector3f extent, Color3f color) {
 		this.sx = extent.x;
 		this.sy = extent.y;
 		this.sz = extent.z;
@@ -35,10 +37,12 @@ public class Barre extends BlockWorldObject {
 
 	public void up() {
 		this.translateTo(new Vector3d(0, 0, -.1f));
+		this.computeTransformedBounds();
 	}
 
 	public void down() {
 		this.translateTo(new Vector3d(0, 0, .1f));
+		this.computeTransformedBounds();
 	}
 
 	private void create3D() {
@@ -55,8 +59,9 @@ public class Barre extends BlockWorldObject {
 		int flags = Primitive.GEOMETRY_NOT_SHARED | Primitive.ENABLE_GEOMETRY_PICKING | Primitive.GENERATE_NORMALS;
 		flags |= Primitive.ENABLE_APPEARANCE_MODIFY;
 
-		com.sun.j3d.utils.geometry.Box box = new com.sun.j3d.utils.geometry.Box(sx/2,sy/2,sz/2,flags,appearance,0);
+		Box box = new Box(sx/2,sy/2,sz/2,flags,appearance,0);
 		box.setPickable(true);
+		box.setCollidable(true);
 
 		BoundingBox bounds = new BoundingBox();
 		bounds.setUpper( sx / 2, sy / 2, sz / 2);

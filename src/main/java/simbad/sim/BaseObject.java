@@ -73,18 +73,17 @@ public  abstract class BaseObject {
 	protected boolean compilable;
     
     /** keep direct pointer onto bounds object associated  to group node. */
-    protected Bounds localBounds;
+	Bounds localBounds;
 
     /** if true the  object can be traversed - no collision  */
-    boolean canBeTraversed;
+	boolean canBeTraversed;
     
-    protected BaseObject() {
+    BaseObject() {
         compilable = false;  
         canBeTraversed = false;
         // Material for object body.
         material = new Material();
         material.setCapability(Material.ALLOW_COMPONENT_WRITE);
-       
     }
 
     /** Translates (relative to current pos) the object to given position. */

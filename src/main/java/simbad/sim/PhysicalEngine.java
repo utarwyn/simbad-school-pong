@@ -299,7 +299,6 @@ public class PhysicalEngine {
     }
 
     protected boolean intersect(BoundingSphere bs, StaticObject obj) {
-
         return obj.intersect(bs);
     }
 

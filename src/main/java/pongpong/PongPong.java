@@ -1,6 +1,7 @@
 package pongpong;
 
 import pongpong.input.KeyManager;
+import pongpong.world.Environment;
 import simbad.gui.Simbad;
 import simbad.sim.World;
 
@@ -17,15 +18,26 @@ public class PongPong {
 		frame.getSimulator().setFramesPerSecond(60);
 		frame.getSimulator().startSimulation();
 
+		frame.getWorld().getCanvas3D().requestFocus();
+
 		KeyManager keyManager = new KeyManager(frame);
 
 		keyManager.addKeyPressListener(
 				KeyEvent.VK_UP,
-				() -> env.getBarre1().up()
+				() -> env.getPaddle1().up()
 		);
 		keyManager.addKeyPressListener(
 				KeyEvent.VK_DOWN,
-				() -> env.getBarre1().down()
+				() -> env.getPaddle1().down()
+		);
+
+		keyManager.addKeyPressListener(
+				KeyEvent.VK_Z,
+				() -> env.getPaddle2().up()
+		);
+		keyManager.addKeyPressListener(
+				KeyEvent.VK_S,
+				() -> env.getPaddle2().down()
 		);
 	}
 
