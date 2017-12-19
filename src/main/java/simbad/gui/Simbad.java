@@ -25,13 +25,16 @@
 
 package simbad.gui;
 
+import pongpong.hud.HUD;
 import simbad.demo.DemoManager;
 import simbad.sim.*;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 //import javax.swing.UIManager;
 
@@ -59,7 +62,7 @@ public class Simbad extends JFrame implements ActionListener {
 	/**
 	 * Construct Simbad application with the given environement description
 	 */
-	public Simbad(EnvironmentDescription ed, String title, boolean debugMode) {
+	public Simbad(EnvironmentDescription ed, String title, HUD hud, boolean debugMode) {
 		super(title);
 
 		simbadInstance = this;
@@ -68,7 +71,9 @@ public class Simbad extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(SIZEX, SIZEY);
 		createGUI();
-		start(ed);
+		start(ed, hud);
+
+		hud.setSimbad(this);
 
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setUndecorated(true);
@@ -77,7 +82,7 @@ public class Simbad extends JFrame implements ActionListener {
 
 
 	/**
-	 * Create the main GUI. Only called once.
+	 * Create the main HUD. Only called once.
 	 */
 	private void createGUI() {
 		desktop.setFocusable(true);
@@ -87,9 +92,9 @@ public class Simbad extends JFrame implements ActionListener {
 	/**
 	 * Starts (or Restarts after releaseRessources) the world and simulator.
 	 */
-	private void start(EnvironmentDescription ed) {
+	private void start(EnvironmentDescription ed, HUD hud) {
 		System.out.println("Starting environmentDescription: " + ed.getClass().getName());
-		world = new World(ed);
+		world = new World(ed, hud);
 		simulator = new Simulator(desktop, world, ed);
 		createInternalFrames();
 
@@ -114,8 +119,11 @@ public class Simbad extends JFrame implements ActionListener {
 		worldWindow = new WorldWindow(world);
 		((BasicInternalFrameUI) worldWindow.getUI()).setNorthPane(null);
 		this.add(worldWindow);
+
 		worldWindow.show();
 		worldWindow.setLocation(0, 0);
+		worldWindow.setBorder(BorderFactory.createLineBorder(Color.WHITE, 5));
+		worldWindow.setCursor(getToolkit().createCustomCursor(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB), new Point(), null));
 
 		if (this.debugMode) {
 			agentInspector = createAgentInspector(simulator, 20, 20);
@@ -159,7 +167,7 @@ public class Simbad extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent event) {
 		if (event.getActionCommand() == "demo") {
 			releaseRessources();
-			start(DemoManager.getDemoFromActionEvent(event));
+			start(DemoManager.getDemoFromActionEvent(event), null);
 		}
 	}
 
@@ -211,7 +219,7 @@ public class Simbad extends JFrame implements ActionListener {
 		//request antialising
 		System.setProperty("j3d.implicitAntialiasing", "true");
 
-		new Simbad(new simbad.demo.BaseDemo(), "Simbad Demo", backgroundMode);
+		new Simbad(new simbad.demo.BaseDemo(), "Simbad Demo", null, backgroundMode);
 	}
 
 	public Simulator getSimulator() {

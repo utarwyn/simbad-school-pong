@@ -1,5 +1,6 @@
 package pongpong.world;
 
+import pongpong.PongPong;
 import simbad.sim.BallAgent;
 import simbad.sim.StaticObject;
 import simbad.sim.Wall;
@@ -37,6 +38,11 @@ public class Ball extends BallAgent {
 			return;
 		}
 
+		if (Math.abs(this.getTranslation().getX()) > 15) {
+			this.ballOut((int) -this.getTranslation().getX());
+			return;
+		}
+
 		if (this.linearVelocity.getX() > 20)
 			this.linearVelocity.setX(20);
 		if (this.linearVelocity.getX() < -20)
@@ -57,6 +63,15 @@ public class Ball extends BallAgent {
 		double vZ = speed * Math.sin(angle);
 
 		this.linearVelocity.set(dirFactor * vX, 0, vZ);
+	}
+
+	private void ballOut(int side) {
+		PongPong instance = PongPong.getInstance();
+
+		instance.getEntityBySide(side).scores();
+		instance.getHUD().updateScores();
+
+		this.moveToStartPosition();
 	}
 
 }

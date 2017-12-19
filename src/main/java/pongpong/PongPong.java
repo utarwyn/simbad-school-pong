@@ -1,5 +1,8 @@
 package pongpong;
 
+import pongpong.entity.Entity;
+import pongpong.entity.Player;
+import pongpong.hud.HUD;
 import pongpong.input.KeyManager;
 import pongpong.world.Environment;
 import simbad.gui.Simbad;
@@ -11,21 +14,29 @@ public class PongPong {
 
 	private static PongPong instance;
 
+	private HUD hud;
+
 	private Environment environment;
 
 	private Simbad simbad;
+
+	private Entity entity1, entity2;
+
+	private Long start;
 
 	private PongPong() {
 		instance = this;
 
 		this.environment = new Environment();
-		this.simbad = new Simbad(this.environment, "Pong pong", false);
+
+		this.hud = new HUD();
+		this.simbad = new Simbad(this.environment, "Pong pong", this.hud, false);
 
 		this.initialize();
 	}
 
-	public Environment getEnvironment() {
-		return environment;
+	public HUD getHUD() {
+		return this.hud;
 	}
 
 	private void initialize() {
@@ -35,6 +46,11 @@ public class PongPong {
 		this.simbad.getSimulator().startSimulation();
 
 		this.simbad.getWorld().getCanvas3D().requestFocus();
+
+		this.entity1 = new Player(-1);
+		this.entity2 = new Player( 1);
+
+		this.start = System.currentTimeMillis();
 
 		KeyManager keyManager = new KeyManager(this.simbad);
 
@@ -68,6 +84,19 @@ public class PongPong {
 					break;
 			}
 		});
+	}
+
+	public String getTimer() {
+		if (this.start == null) return "00:00";
+		long diff = (System.currentTimeMillis() - this.start) / 1000;
+		int mins = (int) diff / 60;
+		int secs = (int) (diff - 60 * mins);
+
+		return String.format("%02d", mins) + ":" + String.format("%02d", secs);
+	}
+
+	public Entity getEntityBySide(int side) {
+		return this.entity1.getSide() < 0 && side < 0 ? this.entity1 : this.entity2;
 	}
 
 	public static PongPong getInstance() {

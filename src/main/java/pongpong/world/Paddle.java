@@ -34,8 +34,7 @@ public class Paddle extends BlockWorldObject {
 
 		this.color = color != null ? color : new Color3f(1, 1, 1);
 		this.compilable = true;
-
-		this.acceleration = BASE_SPEED;
+		this.acceleration = 0;
 
 		this.create3D();
 		this.translateTo(pos);
@@ -50,6 +49,15 @@ public class Paddle extends BlockWorldObject {
 	}
 
 	public void up() {
+		// Not allowed to get out by the top
+		if (this.getTranslation().getZ() - this.sz / 2 < -9) {
+			this.resetAcceleration();
+			return;
+		}
+
+		if (this.acceleration == 0)
+			this.acceleration = BASE_SPEED;
+
 		this.translateTo(new Vector3d(0, 0, -acceleration));
 		this.acceleration = Math.min(this.acceleration + .001f, 1f);
 
@@ -57,6 +65,15 @@ public class Paddle extends BlockWorldObject {
 	}
 
 	public void down() {
+		// Not allowed to get out by the bottom
+		if (this.getTranslation().getZ() + this.sz / 2 > 9) {
+			this.resetAcceleration();
+			return;
+		}
+
+		if (this.acceleration == 0)
+			this.acceleration = BASE_SPEED;
+
 		this.translateTo(new Vector3d(0, 0, acceleration));
 		this.acceleration = Math.min(this.acceleration + .001f, 1f);
 
@@ -64,7 +81,7 @@ public class Paddle extends BlockWorldObject {
 	}
 
 	public void resetAcceleration() {
-		this.acceleration = BASE_SPEED;
+		this.acceleration = 0;
 	}
 
 	private void create3D() {

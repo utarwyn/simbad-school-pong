@@ -24,7 +24,7 @@ public class Simbatch {
     /** Construct a batch version of Simbad simulator */
     public Simbatch(EnvironmentDescription ed, boolean do3DRendering ){
         counter = 0;
-        world = new World(ed);
+        world = new World(ed, null);
         // !!!!
         // We need absolutly to show the 3d world in a window
         // otherwise it reveal a memory bug in java3d

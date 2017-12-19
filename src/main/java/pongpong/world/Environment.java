@@ -17,15 +17,15 @@ public class Environment extends EnvironmentDescription {
 		light1SetPosition(-5, 10, 5);
 		setUsePhysics(true);
 
-		this.paddle1 = new Paddle(new Vector3d(-10, 0, 0), new Vector3f(.3f, 1, 2), new Color3f(1, 0, 0));
-		this.paddle2 = new Paddle(new Vector3d( 10, 0, 0), new Vector3f(.3f, 1, 2), new Color3f(0, 0, 1));
+		this.paddle1 = new Paddle(new Vector3d(-10, 0, 0), new Vector3f(.3f, 1, 2), new Color3f(.130f, .589f, .953f));
+		this.paddle2 = new Paddle(new Vector3d( 10, 0, 0), new Vector3f(.3f, 1, 2), new Color3f(.957f, .263f, .212f));
 
 		add(this.paddle1);
 		add(this.paddle2);
 
 		wallColor = new Color3f(0, 0, 0);
-		add(new Wall(new Vector3d(0, 0, -9), 50, 8, this));
-		add(new Wall(new Vector3d(0, 0, 9), 50, 9, this));
+		add(new Wall(new Vector3d(0, 0, -9), 50, 2, this));
+		add(new Wall(new Vector3d(0, 0, 9), 50, 2, this));
 
 		add(new Ball());
 	}
