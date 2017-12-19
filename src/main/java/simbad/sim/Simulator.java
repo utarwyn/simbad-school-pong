@@ -131,7 +131,7 @@ public class Simulator {
             Object o = ed.objects.get(i);
             objects.add(o);
 
-            if (o instanceof StaticObject){
+            if (o instanceof StaticObject) {
                 // The object is of type static, we add it to the world
                 // and precompute anything possible.
                 StaticObject so = (StaticObject) o;

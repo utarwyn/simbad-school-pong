@@ -64,7 +64,6 @@ public class Agent extends SimpleAgent {
     
     /** Current angular acceleration applied by  motors..*/
     protected Vector3d motorsAngularAcceleration = new Vector3d();
-
    
     private DecimalFormat format; 
     /** Used for frame rate measure */

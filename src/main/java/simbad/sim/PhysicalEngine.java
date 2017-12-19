@@ -215,8 +215,10 @@ public class PhysicalEngine {
                 if (o instanceof StaticObject) {
                     if (intersect(bs1, (StaticObject) o))
                     {
-                        if (checkCollision) 
+                        if (checkCollision) {
                             a1.collisionDetected = true;
+                            a1.objectCollided = (StaticObject) o;
+                        }
                         
                         if (computeInteraction){
                             computeAgentObjectImpact(a1,(StaticObject)o,bs1);

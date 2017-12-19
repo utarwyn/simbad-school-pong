@@ -35,77 +35,87 @@ import java.text.DecimalFormat;
  * Each agent use this kinematic by default.
  */
 public class DefaultKinematic extends KinematicModel {
-    
-  
-    /** Translational velocity  in meters per second. */
-    private double translationalVelocity;
-    /** Rotational velocity  in radians per second */
-    private double rotationalVelocity;
-  
-    
-    DefaultKinematic(){
-        reset();
-    }
-    
-    /** Resets all control parameters to their initial values. */       
-   protected void reset(){
-        rotationalVelocity=0;
-        translationalVelocity=0;
-    }
-   /** Compute instant translation and rotation vectors .
-    * 
-    * @param elapsedSecond time elapsed
-    * @param rotation current rotation
-    * @param instantTranslation to store translation
-    * @param instantRotation to store rotation
-    */ 
 
-     protected void   update(double elapsedSecond,Transform3D rotation,Vector3d instantTranslation,Vector3d instantRotation) {
-        
-         
-        instantTranslation.set(translationalVelocity * elapsedSecond, 0.0, 0.0);
-        // apply current rotation (on y axis)
-        rotation.transform(instantTranslation);
-    
-        // perform rotation - on y axis
-        instantRotation.set(0,elapsedSecond * rotationalVelocity,0);
-        
-    }
 
-    /**
-     * Sets rotational velocity in radians per second.
-     */
-    public final void setRotationalVelocity(double rv) {
-        rotationalVelocity = rv;
-    }
+	/**
+	 * Translational velocity  in meters per second.
+	 */
+	private double translationalVelocity;
+	/**
+	 * Rotational velocity  in radians per second
+	 */
+	private double rotationalVelocity;
 
-    /**
-     * Sets translational velocity in meter per second.
-     */
-    public final void setTranslationalVelocity(double tv) {
-        translationalVelocity = tv;
-    }
-    
-    
-    /**
-     * Gets rotational velocity in radians per second
-     */
-     public final double getRotationalVelocity() {
-        return rotationalVelocity;
-    }
 
-     /**
-      * Gets translational velocity in meter per second.
-      */
-    public final double getTranslationalVelocity() {
-        return translationalVelocity;
-    }
-    
-    
-    /** Resets all control parameters to their initial values. */       
-    protected String toString(DecimalFormat format){
-    return "kinematic \t= DefaultKinematic\n" +
-    "rotVelocity   \t= " + format.format(rotationalVelocity) + " rad/s\n" +
-    "transVelocity \t= " + format.format(translationalVelocity) + " m/s\n";
-    }
+	DefaultKinematic() {
+		reset();
+	}
+
+	/**
+	 * Resets all control parameters to their initial values.
+	 */
+	protected void reset() {
+		rotationalVelocity = 0;
+		translationalVelocity = 0;
+	}
+
+	/**
+	 * Compute instant translation and rotation vectors .
+	 *
+	 * @param elapsedSecond      time elapsed
+	 * @param rotation           current rotation
+	 * @param instantTranslation to store translation
+	 * @param instantRotation    to store rotation
+	 */
+
+	protected void update(double elapsedSecond, Transform3D rotation, Vector3d instantTranslation, Vector3d instantRotation) {
+
+
+		instantTranslation.set(translationalVelocity * elapsedSecond, 0.0, 0.0);
+		// apply current rotation (on y axis)
+		rotation.transform(instantTranslation);
+
+		// perform rotation - on y axis
+		instantRotation.set(0, elapsedSecond * rotationalVelocity, 0);
+
+	}
+
+	/**
+	 * Sets rotational velocity in radians per second.
+	 */
+	public final void setRotationalVelocity(double rv) {
+		rotationalVelocity = rv;
+	}
+
+	/**
+	 * Sets translational velocity in meter per second.
+	 */
+	public final void setTranslationalVelocity(double tv) {
+		translationalVelocity = tv;
+	}
+
+
+	/**
+	 * Gets rotational velocity in radians per second
+	 */
+	public final double getRotationalVelocity() {
+		return rotationalVelocity;
+	}
+
+	/**
+	 * Gets translational velocity in meter per second.
+	 */
+	public final double getTranslationalVelocity() {
+		return translationalVelocity;
+	}
+
+
+	/**
+	 * Resets all control parameters to their initial values.
+	 */
+	protected String toString(DecimalFormat format) {
+		return "kinematic \t= DefaultKinematic\n" +
+				"rotVelocity   \t= " + format.format(rotationalVelocity) + " rad/s\n" +
+				"transVelocity \t= " + format.format(translationalVelocity) + " m/s\n";
+	}
 }

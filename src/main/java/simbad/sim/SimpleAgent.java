@@ -55,6 +55,8 @@ public class SimpleAgent extends BaseObject {
 	 */
 	SimpleAgent veryNearAgent;
 
+	StaticObject objectCollided;
+
 	/**
 	 * Parent simulator.
 	 */
@@ -446,6 +448,10 @@ public class SimpleAgent extends BaseObject {
 	 */
 	public boolean collisionDetected() {
 		return collisionDetected;
+	}
+
+	public StaticObject getObjectCollided() {
+		return objectCollided;
 	}
 
 	/**

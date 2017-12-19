@@ -4,32 +4,38 @@ import simbad.gui.Simbad;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class KeyManager implements KeyListener, Runnable {
 
 	private Simbad simbad;
 
-	private Map<Integer, List<KeyPress>> listeners;
+	private List<CustomKeyEvent> pressListeners;
+
+	private List<CustomKeyEvent> releaseListeners;
 
 	private ConcurrentLinkedQueue<Integer> keysPressed;
 
 	public KeyManager(Simbad simbad) {
 		this.simbad = simbad;
 
-		this.listeners = new HashMap<>();
+		this.pressListeners = new ArrayList<>();
+		this.releaseListeners = new ArrayList<>();
 		this.keysPressed = new ConcurrentLinkedQueue<>();
 
 		this.simbad.getWorld().getCanvas3D().addKeyListener(this);
 		new Thread(this).start();
 	}
 
-	public void addKeyPressListener(int keyCode, KeyPress runnable) {
-		if (!this.listeners.containsKey(keyCode))
-			this.listeners.put(keyCode, new ArrayList<>());
+	public void addKeyPressListener(CustomKeyEvent runnable) {
+		this.pressListeners.add(runnable);
+	}
 
-		this.listeners.get(keyCode).add(runnable);
+	public void addKeyReleaseListener(CustomKeyEvent runnable) {
+		this.releaseListeners.add(runnable);
 	}
 
 	@Override
@@ -47,7 +53,12 @@ public class KeyManager implements KeyListener, Runnable {
 
 	@Override
 	public void keyReleased(KeyEvent keyEvent) {
-		this.keysPressed.remove((Object) keyEvent.getKeyCode());
+		int keyReleased = keyEvent.getKeyCode();
+
+		this.keysPressed.remove(keyReleased);
+
+		for (CustomKeyEvent event : this.releaseListeners)
+			event.run(keyReleased);
 	}
 
 	@Override
@@ -58,11 +69,8 @@ public class KeyManager implements KeyListener, Runnable {
 			while (it.hasNext()) {
 				Integer keyPressed = it.next();
 
-				if (this.listeners.get(keyPressed) == null)
-					continue;
-
-				for (KeyPress event : this.listeners.get(keyPressed))
-					event.onPress();
+				for (CustomKeyEvent event : this.pressListeners)
+					event.run(keyPressed);
 			}
 
 			try {

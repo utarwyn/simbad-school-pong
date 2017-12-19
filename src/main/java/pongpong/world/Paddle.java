@@ -14,7 +14,11 @@ import javax.vecmath.Vector3f;
 
 public class Paddle extends BlockWorldObject {
 
+	private static final float BASE_SPEED = .1f;
+
 	private float sx, sy, sz;
+
+	private float acceleration;
 
 	private Color3f color;
 
@@ -31,18 +35,36 @@ public class Paddle extends BlockWorldObject {
 		this.color = color != null ? color : new Color3f(1, 1, 1);
 		this.compilable = true;
 
+		this.acceleration = BASE_SPEED;
+
 		this.create3D();
 		this.translateTo(pos);
 	}
 
+	public float getLength() {
+		return this.sz;
+	}
+
+	public float getAcceleration() {
+		return this.acceleration;
+	}
+
 	public void up() {
-		this.translateTo(new Vector3d(0, 0, -.1f));
+		this.translateTo(new Vector3d(0, 0, -acceleration));
+		this.acceleration = Math.min(this.acceleration + .001f, 1f);
+
 		this.computeTransformedBounds();
 	}
 
 	public void down() {
-		this.translateTo(new Vector3d(0, 0, .1f));
+		this.translateTo(new Vector3d(0, 0, acceleration));
+		this.acceleration = Math.min(this.acceleration + .001f, 1f);
+
 		this.computeTransformedBounds();
+	}
+
+	public void resetAcceleration() {
+		this.acceleration = BASE_SPEED;
 	}
 
 	private void create3D() {

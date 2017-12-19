@@ -68,7 +68,7 @@ public class Box extends BlockWorldObject {
         translateTo(pos);
     }
     /** Create the 3d object */
-    protected void create3D(EnvironmentDescription wd,Color3f color){
+    protected void create3D(EnvironmentDescription wd, Color3f color){
         // create the box using a primitive
         super.create3D();
         Material mat = new Material();
