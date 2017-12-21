@@ -2,6 +2,7 @@ package pongpong.world;
 
 import com.sun.j3d.utils.geometry.Box;
 import com.sun.j3d.utils.geometry.Primitive;
+import pongpong.util.Rectangle;
 import simbad.sim.BlockWorldObject;
 
 import javax.media.j3d.Appearance;
@@ -14,7 +15,17 @@ import javax.vecmath.Vector3f;
 
 public class Paddle extends BlockWorldObject {
 
-	private static final float BASE_SPEED = .1f;
+	public static final float MIN_Z = -9f;
+
+	public static final float MAX_Z = 9f;
+
+	private Vector3d startPosition;
+
+	private float baseSpeed = .1f;
+
+	private float maxSpeed = 1f;
+
+	private float jolt = .001f;
 
 	private float sx, sy, sz;
 
@@ -26,7 +37,7 @@ public class Paddle extends BlockWorldObject {
 		this(pos, extent, null);
 	}
 
-	Paddle(Vector3d pos, Vector3f extent, Color3f color) {
+	public Paddle(Vector3d pos, Vector3f extent, Color3f color) {
 		this.sx = extent.x;
 		this.sy = extent.y;
 		this.sz = extent.z;
@@ -36,6 +47,8 @@ public class Paddle extends BlockWorldObject {
 		this.compilable = true;
 		this.acceleration = 0;
 
+		this.startPosition = pos;
+
 		this.create3D();
 		this.translateTo(pos);
 	}
@@ -44,39 +57,70 @@ public class Paddle extends BlockWorldObject {
 		return this.sz;
 	}
 
+	public Rectangle get2DRepresentation() {
+		Vector3f pos = this.getTranslation();
+		return new Rectangle(pos.x - sx, pos.z - sz, sx * 2, sz * 2);
+	}
+
 	public float getAcceleration() {
 		return this.acceleration;
 	}
 
+	public void setBaseSpeed(float baseSpeed) {
+		this.baseSpeed = baseSpeed;
+	}
+
+	public void setMaxSpeed(float maxSpeed) {
+		this.maxSpeed = maxSpeed;
+	}
+
+	public void setJolt(float jolt) {
+		this.jolt = jolt;
+	}
+
 	public void up() {
 		// Not allowed to get out by the top
-		if (this.getTranslation().getZ() - this.sz / 2 < -9) {
+		if (this.getTranslation().getZ() - this.sz / 2 < MIN_Z) {
 			this.resetAcceleration();
 			return;
 		}
 
 		if (this.acceleration == 0)
-			this.acceleration = BASE_SPEED;
+			this.acceleration = baseSpeed;
 
 		this.translateTo(new Vector3d(0, 0, -acceleration));
-		this.acceleration = Math.min(this.acceleration + .001f, 1f);
+		this.acceleration = Math.min(this.acceleration + jolt, maxSpeed);
 
 		this.computeTransformedBounds();
 	}
 
 	public void down() {
 		// Not allowed to get out by the bottom
-		if (this.getTranslation().getZ() + this.sz / 2 > 9) {
+		if (this.getTranslation().getZ() + this.sz / 2 > MAX_Z) {
 			this.resetAcceleration();
 			return;
 		}
 
 		if (this.acceleration == 0)
-			this.acceleration = BASE_SPEED;
+			this.acceleration = baseSpeed;
 
 		this.translateTo(new Vector3d(0, 0, acceleration));
-		this.acceleration = Math.min(this.acceleration + .001f, 1f);
+		this.acceleration = Math.min(this.acceleration + jolt, maxSpeed);
 
+		this.computeTransformedBounds();
+	}
+
+	public void moveToStartPosition() {
+		Vector3f pos = this.getTranslation();
+		Vector3d diffVec = new Vector3d(
+				this.startPosition.x - pos.x,
+				this.startPosition.y - pos.y,
+				this.startPosition.z - pos.z
+		);
+
+		this.resetAcceleration();
+
+		this.translateTo(diffVec);
 		this.computeTransformedBounds();
 	}
 

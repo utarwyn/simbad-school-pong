@@ -1,13 +1,18 @@
 package pongpong.entity;
 
+import pongpong.world.Paddle;
+
 public abstract class Entity {
 
 	private int side;
 
 	private int score;
 
-	Entity(int side) {
-		this.side = side;
+	private Paddle paddle;
+
+	Entity(Paddle paddle) {
+		this.paddle = paddle;
+		this.side = paddle.getTranslation().getX() < 0 ? -1 : 1;
 	}
 
 	public void resetScore() {
@@ -16,6 +21,14 @@ public abstract class Entity {
 
 	public void scores() {
 		this.score++;
+	}
+
+	public void loses() {
+
+	}
+
+	public Paddle getPaddle() {
+		return this.paddle;
 	}
 
 	public int getSide() {

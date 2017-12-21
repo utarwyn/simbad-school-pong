@@ -11,6 +11,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class KeyManager implements KeyListener, Runnable {
 
+	private static KeyManager instance;
+
 	private Simbad simbad;
 
 	private List<CustomKeyEvent> pressListeners;
@@ -19,12 +21,14 @@ public class KeyManager implements KeyListener, Runnable {
 
 	private ConcurrentLinkedQueue<Integer> keysPressed;
 
-	public KeyManager(Simbad simbad) {
-		this.simbad = simbad;
-
+	private KeyManager() {
 		this.pressListeners = new ArrayList<>();
 		this.releaseListeners = new ArrayList<>();
 		this.keysPressed = new ConcurrentLinkedQueue<>();
+	}
+
+	public void initialize(Simbad simbad) {
+		this.simbad = simbad;
 
 		this.simbad.getWorld().getCanvas3D().addKeyListener(this);
 		new Thread(this).start();
@@ -79,6 +83,13 @@ public class KeyManager implements KeyListener, Runnable {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public static KeyManager getInstance() {
+		if (instance != null)
+			return instance;
+
+		return instance = new KeyManager();
 	}
 
 }

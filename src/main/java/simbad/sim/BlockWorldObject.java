@@ -23,6 +23,7 @@
  * $Source: /cvsroot/simbad/src/simbad/sim/BlockWorldObject.java,v $
  */
 package simbad.sim;
+
 import javax.media.j3d.Material;
 import javax.vecmath.Color3f;
 

@@ -1,9 +1,11 @@
 package pongpong;
 
+import pongpong.entity.AI;
 import pongpong.entity.Entity;
 import pongpong.entity.Player;
 import pongpong.hud.HUD;
 import pongpong.input.KeyManager;
+import pongpong.world.Ball;
 import pongpong.world.Environment;
 import simbad.gui.Simbad;
 import simbad.sim.World;
@@ -22,9 +24,11 @@ public class PongPong {
 
 	private Entity entity1, entity2;
 
-	private Long start;
+	private Ball ball;
 
-	private PongPong() {
+	private Long startTime;
+
+	private PongPong(boolean two) {
 		instance = this;
 
 		this.environment = new Environment();
@@ -32,63 +36,44 @@ public class PongPong {
 		this.hud = new HUD();
 		this.simbad = new Simbad(this.environment, "Pong pong", this.hud, false);
 
-		this.initialize();
+		this.initialize(two);
+		this.start(two);
 	}
 
 	public HUD getHUD() {
 		return this.hud;
 	}
 
-	private void initialize() {
+	private void initialize(boolean two) {
 		this.simbad.getWorld().changeViewPoint(World.VIEW_FROM_TOP, null);
 
+		this.entity1 = new Player(this.environment.getPaddle1());
+		if (two)
+			this.entity2 = new Player(this.environment.getPaddle2());
+		else
+			this.entity2 = new AI(this.environment.getPaddle2());
+
+		this.ball = this.environment.getBall();
+	}
+
+	private void start(boolean two) {
 		this.simbad.getSimulator().setFramesPerSecond(60);
 		this.simbad.getSimulator().startSimulation();
 
+		this.startTime = System.currentTimeMillis();
+
 		this.simbad.getWorld().getCanvas3D().requestFocus();
+		KeyManager.getInstance().initialize(this.simbad);
 
-		this.entity1 = new Player(-1);
-		this.entity2 = new Player( 1);
-
-		this.start = System.currentTimeMillis();
-
-		KeyManager keyManager = new KeyManager(this.simbad);
-
-		keyManager.addKeyPressListener((keyCode) -> {
-			switch (keyCode) {
-				case KeyEvent.VK_UP:
-					this.environment.getPaddle2().up();
-					break;
-				case KeyEvent.VK_DOWN:
-					this.environment.getPaddle2().down();
-					break;
-
-				case KeyEvent.VK_Z:
-					this.environment.getPaddle1().up();
-					break;
-				case KeyEvent.VK_S:
-					this.environment.getPaddle1().down();
-					break;
-			}
-		});
-
-		keyManager.addKeyReleaseListener((keyCode) -> {
-			switch (keyCode) {
-				case KeyEvent.VK_UP:
-				case KeyEvent.VK_DOWN:
-					this.environment.getPaddle2().resetAcceleration();
-					break;
-				case KeyEvent.VK_Z:
-				case KeyEvent.VK_S:
-					this.environment.getPaddle1().resetAcceleration();
-					break;
-			}
-		});
+		((Player) this.entity1).setMovementKeys(KeyEvent.VK_Z, KeyEvent.VK_S);
+		if (two) {
+			((Player) this.entity2).setMovementKeys(KeyEvent.VK_UP, KeyEvent.VK_DOWN);
+		}
 	}
 
 	public String getTimer() {
-		if (this.start == null) return "00:00";
-		long diff = (System.currentTimeMillis() - this.start) / 1000;
+		if (this.startTime == null) return "00:00";
+		long diff = (System.currentTimeMillis() - this.startTime) / 1000;
 		int mins = (int) diff / 60;
 		int secs = (int) (diff - 60 * mins);
 
@@ -96,7 +81,26 @@ public class PongPong {
 	}
 
 	public Entity getEntityBySide(int side) {
-		return this.entity1.getSide() < 0 && side < 0 ? this.entity1 : this.entity2;
+		if (side < 0) {
+			if (this.entity1.getSide() < 0)
+				return this.entity1;
+			else
+				return this.entity2;
+		} else {
+			if (this.entity1.getSide() > 0)
+				return this.entity1;
+			else
+				return this.entity2;
+		}
+	}
+
+	public Ball getBall() {
+		return this.ball;
+	}
+
+	public void resetPaddles() {
+		this.entity1.getPaddle().moveToStartPosition();
+		this.entity2.getPaddle().moveToStartPosition();
 	}
 
 	public static PongPong getInstance() {
@@ -104,7 +108,7 @@ public class PongPong {
 	}
 
 	public static void main(String[] args) {
-		new PongPong();
+		new PongPong((args.length > 0 && args[0].equals("2")));
 	}
 
 }

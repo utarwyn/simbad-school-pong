@@ -12,15 +12,19 @@ public class Ball extends BallAgent {
 
 	private static final int MAX_ANGLE = 60;
 
-	private static final int SPEED = 6;
+	private static final int SPEED = 8;
 
 	Ball() {
 		super(new Vector3d(0, 0, 0), "Ball", new Color3f(1, 1, 1), .3f, .1f);
 	}
 
+	public Vector3d getVelocity() {
+		return this.linearVelocity;
+	}
+
 	public void initBehavior() {
 		this.linearVelocity = new Vector3d((int) (Math.random() * 20) - 10, 0, (int) (Math.random() * 12) - 6);
-		//this.linearVelocity = new Vector3d(0, 0, 5);
+		this.start(null);
 	}
 
 	public void performBehavior() {
@@ -65,13 +69,29 @@ public class Ball extends BallAgent {
 		this.linearVelocity.set(dirFactor * vX, 0, vZ);
 	}
 
+	private void start(Integer forceSide) {
+		//double angle = Math.toRadians((Math.random() * 360));
+		int dirFactor = forceSide != null ? ((forceSide < 0) ? 0 : 1) : ((Math.random() > .5) ? 0 : 1);
+		double speed = SPEED / 2;
+
+		double angle = Math.toRadians(180 * dirFactor);
+		double vX = speed * Math.cos(angle);
+		double vZ = speed * Math.sin(angle);
+
+		this.moveToStartPosition();
+		this.linearVelocity.set(vX, 0, vZ);
+	}
+
 	private void ballOut(int side) {
 		PongPong instance = PongPong.getInstance();
 
-		instance.getEntityBySide(side).scores();
-		instance.getHUD().updateScores();
+		instance.getEntityBySide( side).scores();
+		instance.getEntityBySide(-side).loses();
 
-		this.moveToStartPosition();
+		instance.getHUD().updateScores();
+		instance.resetPaddles();
+
+		this.start(side);
 	}
 
 }
