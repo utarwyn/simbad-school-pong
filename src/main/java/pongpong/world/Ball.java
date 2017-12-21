@@ -74,7 +74,7 @@ public class Ball extends BallAgent {
 		int dirFactor = forceSide != null ? ((forceSide < 0) ? 0 : 1) : ((Math.random() > .5) ? 0 : 1);
 		double speed = SPEED / 2;
 
-		double angle = Math.toRadians(180 * dirFactor);
+		double angle = Math.toRadians(180 * dirFactor - 5);
 		double vX = speed * Math.cos(angle);
 		double vZ = speed * Math.sin(angle);
 

@@ -28,7 +28,7 @@ public class PongPong {
 
 	private Long startTime;
 
-	private PongPong(boolean two) {
+	private PongPong(char mode) {
 		instance = this;
 
 		this.environment = new Environment();
@@ -36,19 +36,23 @@ public class PongPong {
 		this.hud = new HUD();
 		this.simbad = new Simbad(this.environment, "Pong pong", this.hud, false);
 
-		this.initialize(two);
-		this.start(two);
+		this.initialize(mode);
+		this.start(mode);
 	}
 
 	public HUD getHUD() {
 		return this.hud;
 	}
 
-	private void initialize(boolean two) {
+	private void initialize(char mode) {
 		this.simbad.getWorld().changeViewPoint(World.VIEW_FROM_TOP, null);
 
-		this.entity1 = new Player(this.environment.getPaddle1());
-		if (two)
+		if (mode == '1' || mode == '2')
+			this.entity1 = new Player(this.environment.getPaddle1());
+		else
+			this.entity1 = new AI(this.environment.getPaddle1());
+
+		if (mode == '2')
 			this.entity2 = new Player(this.environment.getPaddle2());
 		else
 			this.entity2 = new AI(this.environment.getPaddle2());
@@ -56,7 +60,7 @@ public class PongPong {
 		this.ball = this.environment.getBall();
 	}
 
-	private void start(boolean two) {
+	private void start(char mode) {
 		this.simbad.getSimulator().setFramesPerSecond(60);
 		this.simbad.getSimulator().startSimulation();
 
@@ -65,10 +69,10 @@ public class PongPong {
 		this.simbad.getWorld().getCanvas3D().requestFocus();
 		KeyManager.getInstance().initialize(this.simbad);
 
-		((Player) this.entity1).setMovementKeys(KeyEvent.VK_Z, KeyEvent.VK_S);
-		if (two) {
+		if (mode == '1' || mode == '2')
+			((Player) this.entity1).setMovementKeys(KeyEvent.VK_Z, KeyEvent.VK_S);
+		if (mode == '2')
 			((Player) this.entity2).setMovementKeys(KeyEvent.VK_UP, KeyEvent.VK_DOWN);
-		}
 	}
 
 	public String getTimer() {
@@ -108,7 +112,8 @@ public class PongPong {
 	}
 
 	public static void main(String[] args) {
-		new PongPong((args.length > 0 && args[0].equals("2")));
+		char mode = (args.length > 0) ? args[0].charAt(0) : '1';
+		new PongPong(mode);
 	}
 
 }

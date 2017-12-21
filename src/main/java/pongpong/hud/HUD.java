@@ -38,12 +38,19 @@ public class HUD {
 
 		if (this.header != null) {
 			int origX = this.simbad.getWidth() / 2 - this.header.getWidth() / 2;
+			int off1 = 90, off2 = 390;
+
+			if (String.valueOf(this.score1).length() > 1)
+				off1 -= 20;
+			if (String.valueOf(this.score2).length() > 1)
+				off2 -= 20;
+
 			g.drawImage(this.header, origX, 0, null);
 
 			g.setColor(Color.WHITE);
 			g.setFont(this.font.deriveFont(Font.PLAIN, 28));
-			g.drawString(String.valueOf(this.score1), origX +  90, 42);
-			g.drawString(String.valueOf(this.score2), origX + 390, 42);
+			g.drawString(String.valueOf(this.score1), origX + off1, 42);
+			g.drawString(String.valueOf(this.score2), origX + off2, 42);
 
 			g.setFont(this.font.deriveFont(Font.PLAIN, 26));
 			g.drawString(PongPong.getInstance().getTimer(), origX + 187, 42);
